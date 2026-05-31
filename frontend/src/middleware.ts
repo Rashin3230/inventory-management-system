@@ -5,7 +5,7 @@ import { AUTH_COOKIE_NAME } from "@/lib/auth/constants";
 import { isAdminRole } from "@/lib/auth/permissions";
 
 const AUTH_ROUTES = ["/login"];
-const ADMIN_ROUTE_PREFIX = "/dashboard/adjustments";
+const ADMIN_ROUTES = ["/dashboard/users"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -40,9 +40,9 @@ export async function middleware(request: NextRequest) {
 
   if (
     isAuthenticated &&
-    pathname.startsWith(ADMIN_ROUTE_PREFIX) &&
     userRole &&
-    !isAdminRole(userRole as "admin" | "staff")
+    !isAdminRole(userRole as "admin" | "staff") &&
+    ADMIN_ROUTES.some((route) => pathname.startsWith(route))
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }

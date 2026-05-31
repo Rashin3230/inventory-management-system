@@ -57,9 +57,81 @@ const AUTH_COOKIE_NAME = "access_token";
 "use strict";
 
 __turbopack_context__.s([
+    "hasPermission",
+    ()=>hasPermission,
     "isAdminRole",
     ()=>isAdminRole
 ]);
+const ROLE_PERMISSIONS = {
+    admin: {
+        products: [
+            "create",
+            "read",
+            "update",
+            "delete"
+        ],
+        suppliers: [
+            "create",
+            "read",
+            "update",
+            "delete"
+        ],
+        purchases: [
+            "create",
+            "read",
+            "update",
+            "delete"
+        ],
+        sales: [
+            "create",
+            "read",
+            "update",
+            "delete"
+        ],
+        inventory: [
+            "read",
+            "export"
+        ],
+        reports: [
+            "read",
+            "export"
+        ],
+        users: [
+            "create",
+            "read",
+            "update",
+            "delete"
+        ]
+    },
+    staff: {
+        products: [
+            "read"
+        ],
+        suppliers: [
+            "read"
+        ],
+        purchases: [
+            "create",
+            "read"
+        ],
+        sales: [
+            "create",
+            "read"
+        ],
+        inventory: [
+            "read",
+            "export"
+        ],
+        reports: [
+            "read"
+        ],
+        users: []
+    }
+};
+function hasPermission(role, module, action) {
+    if (!role) return false;
+    return ROLE_PERMISSIONS[role][module]?.includes(action) ?? false;
+}
 function isAdminRole(role) {
     return role === "admin";
 }
@@ -85,7 +157,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$src$2f$lib$2f$au
 const AUTH_ROUTES = [
     "/login"
 ];
-const ADMIN_ROUTE_PREFIX = "/dashboard/adjustments";
+const ADMIN_ROUTES = [
+    "/dashboard/users"
+];
 async function middleware(request) {
     const { pathname } = request.nextUrl;
     const isAuthRoute = AUTH_ROUTES.includes(pathname);
@@ -110,7 +184,7 @@ async function middleware(request) {
         loginUrl.searchParams.set("callbackUrl", pathname);
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$exports$2f$index$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].redirect(loginUrl);
     }
-    if (isAuthenticated && pathname.startsWith(ADMIN_ROUTE_PREFIX) && userRole && !(0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$src$2f$lib$2f$auth$2f$permissions$2e$ts__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["isAdminRole"])(userRole)) {
+    if (isAuthenticated && userRole && !(0, __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2f$src$2f$lib$2f$auth$2f$permissions$2e$ts__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["isAdminRole"])(userRole) && ADMIN_ROUTES.some((route)=>pathname.startsWith(route))) {
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$exports$2f$index$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].redirect(new URL("/dashboard", request.url));
     }
     return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$exports$2f$index$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].next();
