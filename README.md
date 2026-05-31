@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Inventory Management System
+
+A production-ready inventory management application built with Next.js 15, TypeScript, MongoDB Atlas, Mongoose, Tailwind CSS, and Shadcn UI.
+
+## Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, Shadcn UI
+- **State & Forms:** TanStack Query, React Hook Form, Zod
+- **Backend:** Next.js API Routes, JWT Authentication
+- **Database:** MongoDB Atlas, Mongoose
+
+## Prerequisites
+
+- Node.js 20+
+- npm
+- MongoDB Atlas cluster ([create free cluster](https://www.mongodb.com/cloud/atlas/register))
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment variables
+
+Copy the example file and update values:
+
+```bash
+copy .env.example .env.local
+```
+
+Edit `.env.local`:
+
+| Variable | Description |
+|----------|-------------|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `JWT_SECRET` | Secret key for JWT signing (use a long random string) |
+| `NEXT_PUBLIC_APP_URL` | App URL (default: `http://localhost:3000`) |
+| `JWT_EXPIRES_IN` | Token expiry (default: `7d`) |
+
+**MongoDB Atlas setup:**
+
+1. Create a cluster at [MongoDB Atlas](https://cloud.mongodb.com)
+2. Database Access → Add a database user
+3. Network Access → Add your IP (or `0.0.0.0/0` for development)
+4. Connect → Drivers → copy connection string
+5. Replace `<password>` and set database name to `inventory`
+
+### 3. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Verify database connection
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+curl http://localhost:3000/api/health
+```
 
-## Learn More
+Expected response when MongoDB is configured:
 
-To learn more about Next.js, take a look at the following resources:
+```json
+{
+  "success": true,
+  "message": "Inventory Management System API is healthy",
+  "database": "connected"
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/              # Next.js App Router pages & API routes
+├── components/       # React components (UI + feature)
+├── hooks/            # Custom React hooks
+├── lib/              # Core utilities (db, env, auth helpers)
+├── models/           # Mongoose schemas
+├── repositories/     # Data access layer
+├── services/         # Business logic
+├── types/            # Shared TypeScript types
+├── utils/            # Constants & helpers
+└── validators/       # Zod validation schemas
+```
 
-## Deploy on Vercel
+## Available Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with Turbopack |
+| `npm run build` | Production build |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npm run seed` | Seed database (Phase 2+) |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Development Phases
+
+- [x] **Phase 1:** Project setup, dependencies, MongoDB config, folder structure
+- [ ] **Phase 2:** Database models & authentication
+- [ ] **Phase 3:** Dashboard
+- [ ] **Phase 4:** Product management
+- [ ] **Phase 5:** Suppliers
+- [ ] **Phase 6:** Purchases
+- [ ] **Phase 7:** Sales
+- [ ] **Phase 8:** Inventory management
+- [ ] **Phase 9:** Reports
+- [ ] **Phase 10:** Final optimization
+
+## License
+
+Private — All rights reserved.
